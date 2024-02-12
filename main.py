@@ -86,8 +86,15 @@ for all_text, href_str in all.items():
 
             soup = BeautifulSoup(src, "lxml")
             art_obj = soup.find_all("div", class_="timeline")
-            for item_art in art_obj.items():
-                
+            print(art_obj)
+            artical = ""
+            for item_art in art_obj:
+                print(item_art.text)
+                for char in item_art.text:
+                    #print(char)
+                    if char == "0" or char == "1" or char == "2" or char == "3" or char == "4" or char == "5" or char == "6" or char == "7" or char == "8" or char == "9":
+                        artical = artical + char
+            #print(artical)
             break
         break
     break
