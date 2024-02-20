@@ -1,12 +1,5 @@
 import json
 from turtle import pd
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
 import time
 import requests
 from bs4 import BeautifulSoup
@@ -65,6 +58,8 @@ with open('json_href_str.json', encoding="utf-8") as file:
     all = json.load(file)
 
 for all_text, href_str in all.items():
+    if "Решетки радиатора" in all_text:
+        name_part = "Решетка радиатора"
     quantity = ''
     for char in all_text:
         if char == "0" or char == "1" or char == "2" or char == "3" or char == "4" or char == "5" or char == "6" or char == "7" or char == "8" or char == "9":
@@ -86,15 +81,52 @@ for all_text, href_str in all.items():
 
             soup = BeautifulSoup(src, "lxml")
             art_obj = soup.find_all("div", class_="timeline")
-            print(art_obj)
+            #print(art_obj)
             artical = ""
             for item_art in art_obj:
-                print(item_art.text)
+                #print(item_art.text)
                 for char in item_art.text:
                     #print(char)
                     if char == "0" or char == "1" or char == "2" or char == "3" or char == "4" or char == "5" or char == "6" or char == "7" or char == "8" or char == "9":
                         artical = artical + char
-            #print(artical)
+            print(artical)
+            all_info_obj = soup.find_all(class_="panel panel-default")
+            print(str(all_info_obj))
             break
+
+
+
+        """    offer_obj = soup.find_all(class_="translable")
+            #print(offer_obj)
+            status = "Б.у."
+            num_zap = ""
+            firma = ""
+            version = ""
+            original = ""
+            off = {}
+            number_offer = 1
+            for item_offer in offer_obj:
+                print(item_offer.text, "вот")
+                off[number_offer] = item_offer.texе
+                number_offer += 1
+            print(off)
+            for number_offer, item_offer_text in off.items():
+                if "Состояние" or "состояние" in item_offer_text: 
+                    if "Новый" in off[int(number_offer)+1]:
+                        status = "Новый"
+                if "Номер детали" in item_offer_text:
+                    num_zap = off[int(number_offer)+1]
+                if "Производитель части" in item_offer_text:
+                    firma = off[int(number_offer)+1]
+                if "Состояние упаковки" in item_offer_text:
+                    original = off[int(number_offer)+1]
+            print(status)
+            print(num_zap)
+            print(firma)
+            print(version)
+            print(original)
+            print(name_part)"""
+
+            #break
         break
     break
