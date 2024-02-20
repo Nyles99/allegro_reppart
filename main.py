@@ -90,43 +90,50 @@ for all_text, href_str in all.items():
                     if char == "0" or char == "1" or char == "2" or char == "3" or char == "4" or char == "5" or char == "6" or char == "7" or char == "8" or char == "9":
                         artical = artical + char
             print(artical)
-            all_info_obj = soup.find_all(class_="panel panel-default")
-            print(str(all_info_obj))
-            break
-
-
-
-        """    offer_obj = soup.find_all(class_="translable")
-            #print(offer_obj)
             status = "Б.у."
             num_zap = ""
             firma = ""
             version = ""
             original = ""
-            off = {}
-            number_offer = 1
-            for item_offer in offer_obj:
-                print(item_offer.text, "вот")
-                off[number_offer] = item_offer.texе
-                number_offer += 1
-            print(off)
-            for number_offer, item_offer_text in off.items():
-                if "Состояние" or "состояние" in item_offer_text: 
-                    if "Новый" in off[int(number_offer)+1]:
+            all_info_obj = (soup.find_all("p"))
+            #print(all_info_obj)
+            for item in all_info_obj:
+                #print(item, "туда")
+                item = str(item)
+                if "Состояние" or "состояние" in item: 
+                    if "Новый" in item:
                         status = "Новый"
-                if "Номер детали" in item_offer_text:
-                    num_zap = off[int(number_offer)+1]
-                if "Производитель части" in item_offer_text:
-                    firma = off[int(number_offer)+1]
-                if "Состояние упаковки" in item_offer_text:
-                    original = off[int(number_offer)+1]
+                if "Номер детали" in item:
+                    num_zap = item[item.find('<b class="translable">')+22 : item.find('</b></small>')]
+                if "Производитель части" in item:
+                    firma = item[item.find('<b class="translable">')+22 : item.find('</b></small>')]
+                if '"translable">Версия</span>' in item:
+                    version = item[item.find('<b class="translable">')+22 : item.find('</b></small>')]
+                if '"translable">Качество деталей' in item:
+                    original = item[item.find('<b class="translable">')+22 : item.find('</b></small>')]
+                if '"translable">Вес с индивидуальной упаковкой' in item:
+                    weight = item[item.find('<b class="translable">')+22 : item.find('</b></small>')]
+                
             print(status)
             print(num_zap)
             print(firma)
             print(version)
             print(original)
-            print(name_part)"""
+            print(name_part)
+            print(weight)
+            
+            price_obj = (soup.find_all("span", itemprop="price"))
+            #print(price_obj)
+            for item in price_obj:
+                price = item.text
+            print(price)
 
-            #break
+            marka_and_model_obj = (soup.find_all("h1", itemprop="name", class_="translable"))
+            #print(marka_and_model_obj)
+            for item_mm in marka_and_model_obj:
+                marka = item_mm.text
+            print(marka)
+            
+            break
         break
     break
