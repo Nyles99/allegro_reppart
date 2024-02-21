@@ -58,21 +58,25 @@ with open('json_href_str.json', encoding="utf-8") as file:
     all = json.load(file)
 
 for all_text, href_str in all.items():
+    print(href_str)
     if "Решетки радиатора" in all_text:
         name_part = "Решетка радиатора"
     quantity = ''
     for char in all_text:
         if char == "0" or char == "1" or char == "2" or char == "3" or char == "4" or char == "5" or char == "6" or char == "7" or char == "8" or char == "9":
             quantity = quantity + char
-    page = int(quantity)/30 + 2
+    page = int(int(quantity)/30 + 2)
+    print(page)
     for i in range(1, int(page)):
         href_page = f"{href_str}?id-page={i}&id-per-page=30"
+        print(href_page)
         req = requests.get(url=href_page, headers=headers)
         src = req.text
-
-        soup = BeautifulSoup(src, "lxml")
-        cards_obj = soup.find_all("a", class_="b-item-link")
         
+        soup = BeautifulSoup(src, "lxml")
+        #print(soup)
+        cards_obj = soup.find_all("a", class_="b-item-link")
+        print(cards_obj)
         for item_card in cards_obj:
             href_card = "https://wallegro.ru" + item_card.get("href")
             print(href_card)
@@ -131,8 +135,14 @@ for all_text, href_str in all.items():
             marka_and_model_obj = (soup.find_all("h1", itemprop="name", class_="translable"))
             #print(marka_and_model_obj)
             for item_mm in marka_and_model_obj:
-                marka = item_mm.text
+                marka = item_mm.text.lower()
             print(marka)
+            
+            with open('modelu.json', encoding="utf-8") as file:
+                model_need_list = json.load(file)
+            
+            
+
             
             break
         break
