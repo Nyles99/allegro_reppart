@@ -14,6 +14,22 @@ headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
 }
 
+year_list = []
+file1 = open("year.txt", "r")
+while True:
+    # считываем строку
+    line = file1.readline()
+    line = line.replace("\n","").replace("'","").replace(" ","")
+    # прерываем цикл, если строка пустая
+    if not line:
+        break
+    # выводим строку
+    year_list.append(line)
+#print(black_list)
+# закрываем файл
+file1.close
+
+
 """url = "https://wallegro.ru/cat/620-bAvtozapchastib.html"
 #Первое погружение
 req = requests.get(url, headers=headers)
@@ -138,7 +154,13 @@ for all_text, href_str in all.items():
                 info = item_mm.text.lower()
                 spisok_marka_model = info.split()
             print(info)
-            
+            year = " "
+            for word_year in year_list:
+                
+                if word_year in str(info):
+                    #print(word_year)
+                    year = year + "-" + word_year
+            year = year[2:]
             with open('modelu_new.json', encoding="utf-8") as file:
                 model_need_list = json.load(file)
             
@@ -146,14 +168,15 @@ for all_text, href_str in all.items():
                 if str(marka).lower() in info:
                     marka = marka
                     break
-            string_model = ""
+            string_model = " "
+            
             for model, marka_1 in model_need_list.items():
                 for word in spisok_marka_model:
                     if len(word) > 1:
                         if word.lower() in model:
                             if word.lower() not in string_model:
                                 string_model = str(string_model) + " "+ str(word)
-                    
+            print(year)       
             print(string_model)
             print(marka)
             break
