@@ -76,7 +76,7 @@ for all_text, href_str in all.items():
         soup = BeautifulSoup(src, "lxml")
         #print(soup)
         cards_obj = soup.find_all("a", class_="b-item-link")
-        print(cards_obj)
+        #print(cards_obj)
         for item_card in cards_obj:
             href_card = "https://wallegro.ru" + item_card.get("href")
             print(href_card)
@@ -135,15 +135,27 @@ for all_text, href_str in all.items():
             marka_and_model_obj = (soup.find_all("h1", itemprop="name", class_="translable"))
             #print(marka_and_model_obj)
             for item_mm in marka_and_model_obj:
-                marka = item_mm.text.lower()
-            print(marka)
+                info = item_mm.text.lower()
+                spisok_marka_model = info.split()
+            print(info)
             
-            with open('modelu.json', encoding="utf-8") as file:
+            with open('modelu_new.json', encoding="utf-8") as file:
                 model_need_list = json.load(file)
             
-            
-
-            
+            for model, marka in model_need_list.items():
+                if str(marka).lower() in info:
+                    marka = marka
+                    break
+            string_model = ""
+            for model, marka_1 in model_need_list.items():
+                for word in spisok_marka_model:
+                    if len(word) > 1:
+                        if word.lower() in model:
+                            if word.lower() not in string_model:
+                                string_model = str(string_model) + " "+ str(word)
+                    
+            print(string_model)
+            print(marka)
             break
         break
     break
