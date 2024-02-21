@@ -91,10 +91,10 @@ for all_text, href_str in all.items():
                         artical = artical + char
             print(artical)
             status = "Б.у."
-            num_zap = ""
-            firma = ""
-            version = ""
-            original = ""
+            num_zap = " "
+            firma = " "
+            version = " "
+            original = " "
             all_info_obj = (soup.find_all("p"))
             #print(all_info_obj)
             for item in all_info_obj:
