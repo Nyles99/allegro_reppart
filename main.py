@@ -1,3 +1,4 @@
+import html
 import json
 from turtle import pd
 import time
@@ -74,15 +75,52 @@ with open('json_href_str.json', encoding="utf-8") as file:
     all = json.load(file)
 
 for all_text, href_str in all.items():
-    print(href_str)
+    #print(href_str)
     if "Решетки радиатора" in all_text:
         name_part = "Решетка радиатора"
+
+    if os.path.exists(f"allegro_{name_part}_{time.strftime('%Y-%m-%d')}.csv"):
+        print("файл с таким именем уже есть")
+    else:
+        with open(f"allegro_{name_part}_{time.strftime('%Y-%m-%d')}.csv", "w", encoding="utf-8") as file_data:
+            writer = csv.writer(file_data)
+
+            writer.writerow(
+                (
+                    "АРТИКУЛ",
+                    "МАРКА",
+                    "МОДЕЛЬ",
+                    "ГОД",
+                    "НОМЕР ЗАПЧАСТИ",
+                    "ССЫЛКА НА ЗАПЧАСТЬ",
+                    "ТОПЛИВО",
+                    "ОБЪЕМ",
+                    "ТИП ДВИГАТЕЛЯ",
+                    "КОРОБКА",
+                    "ТИП КУЗОВА",
+                    "ЗАПЧАСТЬ",
+                    "ОПИСАНИЕ",
+                    "ПОД ЗАКАЗ",
+                    "ЦЕНА",
+                    "НОВАЯ",
+                    "ФОТО",
+                    "ФИРМА ПРОИЗВОДИТЕЛЬ",
+                    "ОРИГИНАЛ",
+                    "ВЕРСИЯ СБОРКИ",
+                    "ВЕС ДЛЯ ОТГРУЗКИ",
+                    "СТРАНИЦА ОКОНЧАНИЯ",
+                )
+            )
+
+
+
+    
     quantity = ''
     for char in all_text:
         if char == "0" or char == "1" or char == "2" or char == "3" or char == "4" or char == "5" or char == "6" or char == "7" or char == "8" or char == "9":
             quantity = quantity + char
     page = int(int(quantity)/30 + 2)
-    print(page)
+    #print(page)
     for i in range(1, int(page)):
         href_page = f"{href_str}?id-page={i}&id-per-page=30"
         print(href_page)
@@ -95,10 +133,10 @@ for all_text, href_str in all.items():
         #print(cards_obj)
         for item_card in cards_obj:
             href_card = "https://wallegro.ru" + item_card.get("href")
-            print(href_card)
+            #print(href_card)
             req = requests.get(url=href_card, headers=headers)
             src = req.text
-
+            
             soup = BeautifulSoup(src, "lxml")
             art_obj = soup.find_all("div", class_="timeline")
             #print(art_obj)
@@ -141,8 +179,19 @@ for all_text, href_str in all.items():
             print(original)
             print(name_part)
             print(weight)
+            print(href_card)
             
-            price_obj = (soup.find_all("span", itemprop="price"))
+            
+            img_obj = soup.find_all("div", class_="container", style="padding: 0px 0 0 0")
+            #print(img_obj)
+            for item in img_obj:
+                #print(item, "Новая строка")
+                href_foto = str(item)
+                #print(href_foto)
+                href_foto = href_foto[href_foto.find('"image": [')+12 : href_foto.find('],')- 2].replace("/n","").replace("\r","").replace(" ","")
+                href_foto =  href_foto[href_foto.find('"')+1 : href_foto.find('" ')-1]
+            print(href_foto)
+            price_obj = soup.find_all("span", itemprop="price")
             #print(price_obj)
             for item in price_obj:
                 price = item.text
@@ -155,12 +204,18 @@ for all_text, href_str in all.items():
                 spisok_marka_model = info.split()
             print(info)
             year = " "
-            for word_year in year_list:
+            year_obj = soup.find_all("div", class_="translable")
+            #print(year_obj)
+            for item_year in year_obj:
+                item_year = item_year.text
+                for word_year in year_list:
                 
-                if word_year in str(info):
+                    if word_year in item_year:
                     #print(word_year)
-                    year = year + "-" + word_year
-            year = year[2:]
+                        year = word_year
+            
+                
+            
             with open('modelu_new.json', encoding="utf-8") as file:
                 model_need_list = json.load(file)
             
@@ -179,6 +234,44 @@ for all_text, href_str in all.items():
             print(year)       
             print(string_model)
             print(marka)
-            break
+            fuel = ""
+            engine = ""
+            transmission = ""
+            car_body = ""
+            volume = ""
+            order = ""
+            nomer_str = 1
+
+            file = open(f"allegro_{name_part}_{time.strftime('%Y-%m-%d')}.csv", "a", encoding="utf-8", newline='')
+            writer = csv.writer(file)
+
+            writer.writerow(
+                (
+                    artical,
+                    marka,
+                    string_model,
+                    year,
+                    num_zap,
+                    href_card,
+                    fuel,
+                    volume,
+                    engine,
+                    transmission,
+                    car_body,
+                    name_part,
+                    info,
+                    order,
+                    price,
+                    status,
+                    href_foto,
+                    firma,
+                    original,
+                    version,
+                    weight,
+                    nomer_str
+                )
+            )
+            file.close()
+            
         break
     break
