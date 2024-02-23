@@ -88,10 +88,10 @@ for all_text, href_str in all.items():
             writer.writerow(
                 (
                     "АРТИКУЛ",
+                    "НОМЕР ДЕТАЛИ",
                     "МАРКА",
                     "МОДЕЛЬ",
                     "ГОД",
-                    "НОМЕР ДЕТАЛИ",
                     "ССЫЛКА НА ЗАПЧАСТЬ",
                     "ТОПЛИВО",
                     "ОБЪЕМ",
@@ -148,7 +148,7 @@ for all_text, href_str in all.items():
                     if char == "0" or char == "1" or char == "2" or char == "3" or char == "4" or char == "5" or char == "6" or char == "7" or char == "8" or char == "9":
                         artical = artical + char
             print(artical)
-            status = "Б.у."
+            status = "б.у."
             num_zap = " "
             firma = " "
             version = " "
@@ -248,10 +248,10 @@ for all_text, href_str in all.items():
             writer.writerow(
                 (
                     artical,
+                    num_zap,
                     marka,
                     string_model,
                     year,
-                    num_zap,
                     href_card,
                     fuel,
                     volume,
