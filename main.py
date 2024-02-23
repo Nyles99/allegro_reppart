@@ -91,7 +91,7 @@ for all_text, href_str in all.items():
                     "МАРКА",
                     "МОДЕЛЬ",
                     "ГОД",
-                    "НОМЕР ЗАПЧАСТИ",
+                    "НОМЕР ДЕТАЛИ",
                     "ССЫЛКА НА ЗАПЧАСТЬ",
                     "ТОПЛИВО",
                     "ОБЪЕМ",
@@ -221,7 +221,7 @@ for all_text, href_str in all.items():
             
             for model, marka in model_need_list.items():
                 if str(marka).lower() in info:
-                    marka = marka
+                    marka = str(marka).upper()
                     break
             string_model = " "
             
@@ -230,7 +230,7 @@ for all_text, href_str in all.items():
                     if len(word) > 1:
                         if word.lower() in model:
                             if word.lower() not in string_model:
-                                string_model = str(string_model) + " "+ str(word)
+                                string_model = str(string_model).upper() + " "+ str(word).upper()
             print(year)       
             print(string_model)
             print(marka)
@@ -273,5 +273,5 @@ for all_text, href_str in all.items():
             )
             file.close()
             
-        break
+        
     break
