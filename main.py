@@ -78,10 +78,15 @@ for all_text, href_str in all.items():
     #print(href_str)
     if nomer == 117:
         print(all_text)
+        if href_str == "https://wallegro.ru/cat/260576-Sistema-ABS-i-ESP.html":
+            href_str = "https://wallegro.ru/cat/260618-Drajvery-ABS.html"
+            name_part = "Блок ABS"
+            all_text = "Система ABS и ESP 22666"
+            
         if "Решетки радиатора" in all_text:
             name_part = "Решетка радиатора"
+            
         
-        name_part = "Система ABS и ESP"
 
         if os.path.exists(f"allegro_{name_part}_{time.strftime('%Y-%m-%d')}.csv"):
             print("файл с таким именем уже есть")
@@ -160,6 +165,7 @@ for all_text, href_str in all.items():
                 version = " "
                 original = " "
                 all_info_obj = (soup.find_all("p"))
+                weight = " "
                 #print(all_info_obj)
                 for item in all_info_obj:
                     #print(item, "туда")
@@ -169,6 +175,11 @@ for all_text, href_str in all.items():
                             status = "Новый"
                     if "Номер детали" in item:
                         num_zap = item[item.find('<b class="translable">')+22 : item.find('</b></small>')]
+                        list_num_zap = num_zap.split()
+                        num_zap = ''
+                        for slovo in list_num_zap:
+                            if ("0" or "1" or "2" or "3" or "4" or "5" or "6" or "7" or "8" or "9") in slovo:
+                                num_zap = num_zap + "; " + slovo
                     if "Производитель части" in item:
                         firma = item[item.find('<b class="translable">')+22 : item.find('</b></small>')]
                     if '"translable">Версия</span>' in item:
@@ -237,7 +248,10 @@ for all_text, href_str in all.items():
                             if len(word) > 1:
                                 if word.lower() in model:
                                     if word.lower() not in string_model:
-                                        string_model = str(string_model).upper() + " "+ str(word).upper()
+                                        string_model = str(string_model).upper() + "!!! "+ str(word).upper()
+                    #print(string_model, "Смотреть сюда")
+                    string_model = string_model[4 : ]
+                    string_model = string_model[: string_model.find("!!! ")]                
                     print(year)       
                     print(string_model)
                     print(marka)
@@ -248,37 +262,37 @@ for all_text, href_str in all.items():
                     volume = ""
                     order = ""
                     nomer_str = 1
+                    if int(price) > 500:
+                        file = open(f"allegro_{name_part}_{time.strftime('%Y-%m-%d')}.csv", "a", encoding="utf-8", newline='')
+                        writer = csv.writer(file)
 
-                    file = open(f"allegro_{name_part}_{time.strftime('%Y-%m-%d')}.csv", "a", encoding="utf-8", newline='')
-                    writer = csv.writer(file)
-
-                    writer.writerow(
-                        (
-                            artical,
-                            num_zap,
-                            marka,
-                            string_model,
-                            year,
-                            href_card,
-                            fuel,
-                            volume,
-                            engine,
-                            transmission,
-                            car_body,
-                            name_part,
-                            info,
-                            order,
-                            price,
-                            status,
-                            href_foto,
-                            firma,
-                            original,
-                            version,
-                            weight,
-                            nomer_str
+                        writer.writerow(
+                            (
+                                artical,
+                                num_zap,
+                                marka,
+                                string_model,
+                                year,
+                                href_card,
+                                fuel,
+                                volume,
+                                engine,
+                                transmission,
+                                car_body,
+                                name_part,
+                                info,
+                                order,
+                                price,
+                                status,
+                                href_foto,
+                                firma,
+                                original,
+                                version,
+                                weight,
+                                nomer_str
+                            )
                         )
-                    )
-                    file.close()
+                        file.close()
                 else:
                     print(f"Уже было, давай следующую! Повторений уже {count}" )
                     count += 1
