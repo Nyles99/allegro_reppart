@@ -83,6 +83,7 @@ def osnova(name_part, all_text, href_str):
                 (
                     "АРТИКУЛ",
                     "НОМЕР ДЕТАЛИ",
+                    "НОМЕР ДЕТАЛИ ОСТАЛЬНЫЕ",
                     "МАРКА",
                     "МОДЕЛЬ",
                     "ГОД",
@@ -164,7 +165,9 @@ def osnova(name_part, all_text, href_str):
                     num_zap = ''
                     for slovo in list_num_zap:
                         if ("0" or "1" or "2" or "3" or "4" or "5" or "6" or "7" or "8" or "9") in slovo:
-                            num_zap = num_zap + "; " + slovo
+                            num_zap = num_zap + slovo + "; "
+                num_zap_all = num_zap[num_zap.find(";")+ 1 :]
+                num_zap = num_zap[: num_zap.find(";")] 
                 if "Производитель части" in item:
                     firma = item[item.find('<b class="translable">')+22 : item.find('</b></small>')]
                 if '"translable">Версия</span>' in item:
@@ -255,6 +258,7 @@ def osnova(name_part, all_text, href_str):
                         (
                             artical,
                             num_zap,
+                            num_zap_all,
                             marka,
                             string_model,
                             year,
@@ -297,13 +301,27 @@ for all_text, href_str in all.items():
             href_str = "https://wallegro.ru/cat/260618-Drajvery-ABS.html"
             name_part = "Блок ABS"
             all_text = "Система ABS и ESP 22666"
+            osnova(name_part, all_text, href_str)
             
         if href_str == "https://wallegro.ru/cat/254664-Reshetki-radiatora.html":
             name_part = "Решетка радиатора"
+            osnova(name_part, all_text, href_str)
 
-        if href_str == "https://wallegro.ru/cat/18690-Radiatory.html":    
-        
+        if href_str == "https://wallegro.ru/cat/18690-Radiatory.html":
+            href_str = "https://wallegro.ru/cat/251083-Radiatory-masla.html"
+            all_text = "Радиаторы масла 130018"
+            name_part = "Радиатор масляный"    
+            osnova(name_part, all_text, href_str)
 
+            href_str = "https://wallegro.ru/cat/251084-Radiatory-vozduxa-intercoolery.html"
+            all_text = "Радиаторы воздуха 187095"
+            name_part = "Интеркулер"    
+            osnova(name_part, all_text, href_str)
+
+            href_str = "https://wallegro.ru/cat/251082-Kulery-dlya-vody.html"
+            all_text = "Кулеры для воды 659161"
+            name_part = "Радиатор (основной)"    
+            osnova(name_part, all_text, href_str)
         
     nomer += 1
     
