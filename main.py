@@ -125,6 +125,8 @@ def osnova(name_part, all_text, href_str):
         src = req.text
         
         soup = BeautifulSoup(src, "lxml")
+
+        name_part_obj = soup.find_all("span", class_="b-game-link-header translable")
         #print(soup)
         cards_obj = soup.find_all("a", class_="b-item-link")
         #print(cards_obj)
@@ -133,8 +135,42 @@ def osnova(name_part, all_text, href_str):
             #print(href_card)
             req = requests.get(url=href_card, headers=headers)
             src = req.text
-            
             soup = BeautifulSoup(src, "lxml")
+            name_part_obj = soup.find_all("h1", itemprop="name",  class_="translable")
+
+            print(name_part_obj.text)
+            for item_name in name_part_obj:
+                part = (item_name.text)
+            if "Радиатор масляный" in name_part:
+                if "фильтр" in part.lower():
+                    name_part = "Масляный фильтр"
+                if "патрубок" or 'шланг' in part.lower():
+                    name_part = "Патрубок масляного радиатора"
+                if "корпус" or "основание" in part.lower():
+                    name_part = "Корпус масляного радиатора"
+                if "с корпусом" in part.lower():
+                    name_part = "Масляный радиатор с корпусом"
+                if "прокладки" or "прокладка" or "прокладок" in part.lower():
+                    name_part = "Прокладка фильтра"
+                if "с термостатом" in part.lower():
+                    name_part = "Масляный радиатор с термостатом"
+                if "кронштейн" or "крепление"  in part.lower():
+                    name_part = "Кронштейн радиатора"
+                if "кулеры" or "кулер" in part.lower():
+                    name_part = "Комплект кулеров"
+                if "гидроусилителя" or "гидроусилитель" in part.lower():
+                    name_part = "Радиатор гидроусилителя"
+                if "внешний термостат" in part.lower():
+                    name_part = "Внешний термостат"
+                if "уплотнения" or "уплотнители" or "уплотнительное" in part.lower():
+                    name_part = "Уплотнитель масляного радиатора"
+                if "крышка" in part.lower():
+                    name_part = "Крышка масляного радиатора"
+                if "выход радиатора" in part.lower():
+                    name_part = "Выход радиатора"
+                if "подставка" in part.lower():
+                    name_part = "Подставка под масляный фильтр"
+
             art_obj = soup.find_all("div", class_="timeline")
             #print(art_obj)
             artical = ""
@@ -282,6 +318,7 @@ def osnova(name_part, all_text, href_str):
                         )
                     )
                     file.close()
+                    print("    ")
             else:
                 print(f"Уже было, давай следующую! Повторений уже {count}" )
                 count += 1
