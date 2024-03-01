@@ -141,35 +141,68 @@ def osnova(name_part, all_text, href_str):
             print(name_part_obj.text)
             for item_name in name_part_obj:
                 part = (item_name.text)
-            if "Радиатор масляный" in name_part:
+            if "Радиатор масляный" in name_part_1:
                 if "фильтр" in part.lower():
                     name_part = "Масляный фильтр"
-                if "патрубок" or 'шланг' in part.lower():
+                elif "патрубок" or 'шланг' in part.lower():
                     name_part = "Патрубок масляного радиатора"
-                if "корпус" or "основание" in part.lower():
+                elif "корпус" or "основание" in part.lower():
                     name_part = "Корпус масляного радиатора"
-                if "с корпусом" in part.lower():
+                elif "с корпусом" in part.lower():
                     name_part = "Масляный радиатор с корпусом"
-                if "прокладки" or "прокладка" or "прокладок" in part.lower():
+                elif "прокладки" or "прокладка" or "прокладок" in part.lower():
                     name_part = "Прокладка фильтра"
-                if "с термостатом" in part.lower():
+                elif "с термостатом" in part.lower():
                     name_part = "Масляный радиатор с термостатом"
-                if "кронштейн" or "крепление"  in part.lower():
+                elif "кронштейн" or "крепление"  in part.lower():
                     name_part = "Кронштейн радиатора"
-                if "кулеры" or "кулер" in part.lower():
+                elif "кулеры" or "кулер" in part.lower():
                     name_part = "Комплект кулеров"
-                if "гидроусилителя" or "гидроусилитель" in part.lower():
+                elif "гидроусилителя" or "гидроусилитель" in part.lower():
                     name_part = "Радиатор гидроусилителя"
-                if "внешний термостат" in part.lower():
+                elif "внешний термостат" in part.lower():
                     name_part = "Внешний термостат"
-                if "уплотнения" or "уплотнители" or "уплотнительное" in part.lower():
+                elif "уплотнения" or "уплотнители" or "уплотнительное" in part.lower():
                     name_part = "Уплотнитель масляного радиатора"
-                if "крышка" in part.lower():
+                elif "крышка" in part.lower():
                     name_part = "Крышка масляного радиатора"
-                if "выход радиатора" in part.lower():
+                elif "выход радиатора" in part.lower():
                     name_part = "Выход радиатора"
-                if "подставка" in part.lower():
+                elif "подставка" in part.lower():
                     name_part = "Подставка под масляный фильтр"
+                else:
+                    name_part = "Радиатор масляный"
+            if "Интеркулер" in name_part_2:
+                if "charge pipe" or "воздуховод" or "труба" or "шланг" in part.lower():
+                    name_part = "Патрубок интеркулера"
+                elif "крепление" in part.lower():
+                    name_part = "Крепление интеркулера"
+                elif "прокладки" or "прокладка" or "прокладок" in part.lower():
+                    name_part = "Прокладка интеркулера"
+                elif "kolektor" in part.lower():
+                    name_part = "Впускной коллектор"
+                elif "вентилятор" in part.lower():
+                    name_part = "Вентилятор радиатора"
+                elif "правый интеркулер" in part.lower():
+                    name_part = "Правый интеркулер"
+                elif "кольцо" in part.lower():
+                    name_part = "Кольцо интеркулера"
+                elif "рамка" or "корпус" in part.lower():
+                    name_part = "Корпус интеркулера"
+                elif "комплект радиатора" in part.lower():
+                    name_part = "Комплект радиатора"
+                elif "жалюзи" in part.lower():
+                    name_part = "Жалюзи интеркулера"
+                else:
+                    name_part = "Интеркулер"
+            if "Радиатор (основной)" in name_part_3:
+                if "комплект кулеров" or "комплект охлаждающих" in part.lower():
+                    name_part = "Комплект кулеров"
+                elif "крепление" in part.lower():
+                    name_part = "Крепление радиатора"
+                else:
+                    name_part = "Радиатор (основной)"
+                
 
             art_obj = soup.find_all("div", class_="timeline")
             #print(art_obj)
@@ -347,17 +380,17 @@ for all_text, href_str in all.items():
         if href_str == "https://wallegro.ru/cat/18690-Radiatory.html":
             href_str = "https://wallegro.ru/cat/251083-Radiatory-masla.html"
             all_text = "Радиаторы масла 130018"
-            name_part = "Радиатор масляный"    
+            name_part_1 = "Радиатор масляный"    
             osnova(name_part, all_text, href_str)
 
             href_str = "https://wallegro.ru/cat/251084-Radiatory-vozduxa-intercoolery.html"
             all_text = "Радиаторы воздуха 187095"
-            name_part = "Интеркулер"    
+            name_part_2 = "Интеркулер"    
             osnova(name_part, all_text, href_str)
 
             href_str = "https://wallegro.ru/cat/251082-Kulery-dlya-vody.html"
             all_text = "Кулеры для воды 659161"
-            name_part = "Радиатор (основной)"    
+            name_part_3 = "Радиатор (основной)"    
             osnova(name_part, all_text, href_str)
         
     nomer += 1
