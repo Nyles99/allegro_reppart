@@ -73,10 +73,10 @@ with open("json_href_str.json", "a", encoding="utf-8") as file:
 
 def osnova(name_part, all_text, href_str):
 
-    if os.path.exists(f"allegro_{name_part}_{time.strftime('%Y-%m-%d')}.csv"):
+    if os.path.exists(f"allegro_{all_text}_{time.strftime('%Y-%m-%d')}.csv"):
         print("файл с таким именем уже есть")
     else:
-        with open(f"allegro_{name_part}_{time.strftime('%Y-%m-%d')}.csv", "w", encoding="utf-8") as file_data:
+        with open(f"allegro_{all_text}_{time.strftime('%Y-%m-%d')}.csv", "w", encoding="utf-8") as file_data:
             writer = csv.writer(file_data)
 
             writer.writerow(
@@ -116,7 +116,8 @@ def osnova(name_part, all_text, href_str):
             quantity = quantity + char
     page = int(int(quantity)/30 + 2)
     #print(page)
-    count_num_zap = []
+    
+    href_card_list = []
     count = 1
     for i in range(1, int(page)):
         href_page = f"{href_str}?id-page={i}&id-per-page=30"
@@ -130,123 +131,132 @@ def osnova(name_part, all_text, href_str):
         #print(soup)
         cards_obj = soup.find_all("a", class_="b-item-link")
         #print(cards_obj)
+        
         for item_card in cards_obj:
+            
             href_card = "https://wallegro.ru" + item_card.get("href")
             #print(href_card)
-            req = requests.get(url=href_card, headers=headers)
-            src = req.text
-            soup = BeautifulSoup(src, "lxml")
-            name_part_obj = soup.find_all("h1", itemprop="name",  class_="translable")
+            if href_card not in href_card_list:
+                href_card_list.append(href_card)
+                print(href_card)
+                req = requests.get(url=href_card, headers=headers)
+                src = req.text
+                soup = BeautifulSoup(src, "lxml")
+                name_part_obj = soup.find_all("h1", itemprop="name",  class_="translable")
 
-            print(name_part_obj.text)
-            for item_name in name_part_obj:
-                part = (item_name.text)
-            if "Радиатор масляный" in name_part_1:
-                if "фильтр" in part.lower():
-                    name_part = "Масляный фильтр"
-                elif "патрубок" or 'шланг' in part.lower():
-                    name_part = "Патрубок масляного радиатора"
-                elif "корпус" or "основание" in part.lower():
-                    name_part = "Корпус масляного радиатора"
-                elif "с корпусом" in part.lower():
-                    name_part = "Масляный радиатор с корпусом"
-                elif "прокладки" or "прокладка" or "прокладок" in part.lower():
-                    name_part = "Прокладка фильтра"
-                elif "с термостатом" in part.lower():
-                    name_part = "Масляный радиатор с термостатом"
-                elif "кронштейн" or "крепление"  in part.lower():
-                    name_part = "Кронштейн радиатора"
-                elif "кулеры" or "кулер" in part.lower():
-                    name_part = "Комплект кулеров"
-                elif "гидроусилителя" or "гидроусилитель" in part.lower():
-                    name_part = "Радиатор гидроусилителя"
-                elif "внешний термостат" in part.lower():
-                    name_part = "Внешний термостат"
-                elif "уплотнения" or "уплотнители" or "уплотнительное" in part.lower():
-                    name_part = "Уплотнитель масляного радиатора"
-                elif "крышка" in part.lower():
-                    name_part = "Крышка масляного радиатора"
-                elif "выход радиатора" in part.lower():
-                    name_part = "Выход радиатора"
-                elif "подставка" in part.lower():
-                    name_part = "Подставка под масляный фильтр"
-                else:
-                    name_part = "Радиатор масляный"
-            if "Интеркулер" in name_part_2:
-                if "charge pipe" or "воздуховод" or "труба" or "шланг" in part.lower():
-                    name_part = "Патрубок интеркулера"
-                elif "крепление" in part.lower():
-                    name_part = "Крепление интеркулера"
-                elif "прокладки" or "прокладка" or "прокладок" in part.lower():
-                    name_part = "Прокладка интеркулера"
-                elif "kolektor" in part.lower():
-                    name_part = "Впускной коллектор"
-                elif "вентилятор" in part.lower():
-                    name_part = "Вентилятор радиатора"
-                elif "правый интеркулер" in part.lower():
-                    name_part = "Правый интеркулер"
-                elif "кольцо" in part.lower():
-                    name_part = "Кольцо интеркулера"
-                elif "рамка" or "корпус" in part.lower():
-                    name_part = "Корпус интеркулера"
-                elif "комплект радиатора" in part.lower():
-                    name_part = "Комплект радиатора"
-                elif "жалюзи" in part.lower():
-                    name_part = "Жалюзи интеркулера"
-                else:
-                    name_part = "Интеркулер"
-            if "Радиатор (основной)" in name_part_3:
-                if "комплект кулеров" or "комплект охлаждающих" in part.lower():
-                    name_part = "Комплект кулеров"
-                elif "крепление" in part.lower():
-                    name_part = "Крепление радиатора"
-                else:
-                    name_part = "Радиатор (основной)"
-                
+                #print(name_part_obj.text)
+                for item_name in name_part_obj:
+                    part = (item_name.text)
+                print(part)
+                if "Радиаторы масла" in all_text:
+                    if "фильтр" in part.lower():
+                        name_part = "Масляный фильтр"
+                        #print(name_part)
+                    elif "патрубок" or 'шланг' in part.lower():
+                        name_part = "Патрубок масляного радиатора"
+                    elif "корпус" or "основание" in part.lower():
+                        name_part = "Корпус масляного радиатора"
+                    elif "с корпусом" in part.lower():
+                        name_part = "Масляный радиатор с корпусом"
+                    elif "прокладки" or "прокладка" or "прокладок" in part.lower():
+                        name_part = "Прокладка фильтра"
+                    elif "с термостатом" in part.lower():
+                        name_part = "Масляный радиатор с термостатом"
+                    elif "кронштейн" or "крепление"  in part.lower():
+                        name_part = "Кронштейн радиатора"
+                    elif "кулеры" or "кулер" in part.lower():
+                        name_part = "Комплект кулеров"
+                    elif "гидроусилителя" or "гидроусилитель" in part.lower():
+                        name_part = "Радиатор гидроусилителя"
+                    elif "внешний термостат" in part.lower():
+                        name_part = "Внешний термостат"
+                    elif "уплотнения" or "уплотнители" or "уплотнительное" in part.lower():
+                        name_part = "Уплотнитель масляного радиатора"
+                    elif "крышка" in part.lower():
+                        name_part = "Крышка масляного радиатора"
+                    elif "выход радиатора" in part.lower():
+                        name_part = "Выход радиатора"
+                    elif "подставка" in part.lower():
+                        name_part = "Подставка под масляный фильтр"
+                    else:
+                        name_part = "Радиатор масляный"
+                if "Радиаторы воздуха" in all_text:
+                    if "charge pipe" or "воздуховод" or "труба" or "шланг" in part.lower():
+                        name_part = "Патрубок интеркулера"
+                    elif "крепление" in part.lower():
+                        name_part = "Крепление интеркулера"
+                    elif "прокладки" or "прокладка" or "прокладок" in part.lower():
+                        name_part = "Прокладка интеркулера"
+                    elif "kolektor" in part.lower():
+                        name_part = "Впускной коллектор"
+                    elif "вентилятор" in part.lower():
+                        name_part = "Вентилятор радиатора"
+                    elif "правый интеркулер" in part.lower():
+                        name_part = "Правый интеркулер"
+                    elif "кольцо" in part.lower():
+                        name_part = "Кольцо интеркулера"
+                    elif "рамка" or "корпус" in part.lower():
+                        name_part = "Корпус интеркулера"
+                    elif "комплект радиатора" in part.lower():
+                        name_part = "Комплект радиатора"
+                    elif "жалюзи" in part.lower():
+                        name_part = "Жалюзи интеркулера"
+                    else:
+                        name_part = "Интеркулер"
+                if "Кулеры для воды" in all_text:
+                    if "комплект кулеров" or "комплект охлаждающих" in part.lower():
+                        name_part = "Комплект кулеров"
+                    elif "крепление" in part.lower():
+                        name_part = "Крепление радиатора"
+                    else:
+                        name_part = "Радиатор (основной)"
+                    
 
-            art_obj = soup.find_all("div", class_="timeline")
-            #print(art_obj)
-            artical = ""
-            for item_art in art_obj:
-                #print(item_art.text)
-                for char in item_art.text:
-                    #print(char)
-                    if char == "0" or char == "1" or char == "2" or char == "3" or char == "4" or char == "5" or char == "6" or char == "7" or char == "8" or char == "9":
-                        artical = artical + char
-            print(artical)
-            status = "б.у."
-            num_zap = " "
-            firma = " "
-            version = " "
-            original = " "
-            all_info_obj = (soup.find_all("p"))
-            weight = " "
-            #print(all_info_obj)
-            for item in all_info_obj:
-                #print(item, "туда")
-                item = str(item)
-                if "Состояние" or "состояние" in item: 
-                    if "Новый" in item:
-                        status = "Новый"
-                if "Номер детали" in item:
-                    num_zap = item[item.find('<b class="translable">')+22 : item.find('</b></small>')]
-                    list_num_zap = num_zap.split()
-                    num_zap = ''
-                    for slovo in list_num_zap:
-                        if ("0" or "1" or "2" or "3" or "4" or "5" or "6" or "7" or "8" or "9") in slovo:
-                            num_zap = num_zap + slovo + "; "
-                num_zap_all = num_zap[num_zap.find(";")+ 1 :]
-                num_zap = num_zap[: num_zap.find(";")] 
-                if "Производитель части" in item:
-                    firma = item[item.find('<b class="translable">')+22 : item.find('</b></small>')]
-                if '"translable">Версия</span>' in item:
-                    version = item[item.find('<b class="translable">')+22 : item.find('</b></small>')]
-                if '"translable">Качество деталей' in item:
-                    original = item[item.find('<b class="translable">')+22 : item.find('</b></small>')]
-                if '"translable">Вес с индивидуальной упаковкой' in item:
-                    weight = item[item.find('<b class="translable">')+22 : item.find('</b></small>')]
-            if num_zap not in count_num_zap:
-                count_num_zap.append(num_zap)  
+                art_obj = soup.find_all("div", class_="timeline")
+                #print(art_obj)
+                artical = ""
+                for item_art in art_obj:
+                    #print(item_art.text)
+                    for char in item_art.text:
+                        #print(char)
+                        if char == "0" or char == "1" or char == "2" or char == "3" or char == "4" or char == "5" or char == "6" or char == "7" or char == "8" or char == "9":
+                            artical = artical + char
+                print(artical)
+                status = "б.у."
+                num_zap = " "
+                firma = " "
+                version = " "
+                original = " "
+                all_info_obj = (soup.find_all("p"))
+                weight = " "
+                #print(all_info_obj)
+                for item in all_info_obj:
+                    #print(item, "туда")
+                    item = str(item)
+                    if "Состояние" or "состояние" in item: 
+                        if "Новый" in item:
+                            status = "Новый"
+                    if "Номер детали" in item:
+                        num_zap = item[item.find('<b class="translable">')+22 : item.find('</b></small>')]
+                        list_num_zap = num_zap.split()
+                        print(list_num_zap,"лист")
+                        num_zap = ''
+                        for slovo in list_num_zap:
+                            if ("0" or "1" or "2" or "3" or "4" or "5" or "6" or "7" or "8" or "9") in slovo:
+                                num_zap = num_zap + slovo + "; "
+                    num_zap_all = num_zap[num_zap.find(";")+ 1 :]
+                    num_zap = num_zap[: num_zap.find(";")]
+                     
+                    if "Производитель части" in item:
+                        firma = item[item.find('<b class="translable">')+22 : item.find('</b></small>')]
+                    if '"translable">Версия</span>' in item:
+                        version = item[item.find('<b class="translable">')+22 : item.find('</b></small>')]
+                    if '"translable">Качество деталей' in item:
+                        original = item[item.find('<b class="translable">')+22 : item.find('</b></small>')]
+                    if '"translable">Вес с индивидуальной упаковкой' in item:
+                        weight = item[item.find('<b class="translable">')+22 : item.find('</b></small>')]
+
+                 
                 print(status)
                 print(num_zap)
                 print(firma)
@@ -320,7 +330,7 @@ def osnova(name_part, all_text, href_str):
                 order = ""
                 nomer_str = 1
                 if int(price) > 500:
-                    file = open(f"allegro_{name_part}_{time.strftime('%Y-%m-%d')}.csv", "a", encoding="utf-8", newline='')
+                    file = open(f"allegro_{all_text}_{time.strftime('%Y-%m-%d')}.csv", "a", encoding="utf-8", newline='')
                     writer = csv.writer(file)
 
                     writer.writerow(
@@ -380,18 +390,20 @@ for all_text, href_str in all.items():
         if href_str == "https://wallegro.ru/cat/18690-Radiatory.html":
             href_str = "https://wallegro.ru/cat/251083-Radiatory-masla.html"
             all_text = "Радиаторы масла 130018"
-            name_part_1 = "Радиатор масляный"    
-            osnova(name_part, all_text, href_str)
+            name_part_1 = "Радиатор масляный"
+            print(name_part_1)    
+            osnova(name_part_1, all_text, href_str)
 
             href_str = "https://wallegro.ru/cat/251084-Radiatory-vozduxa-intercoolery.html"
             all_text = "Радиаторы воздуха 187095"
-            name_part_2 = "Интеркулер"    
-            osnova(name_part, all_text, href_str)
+            name_part_2 = "Интеркулер" 
+            print(name_part_2)   
+            osnova(name_part_2, all_text, href_str)
 
             href_str = "https://wallegro.ru/cat/251082-Kulery-dlya-vody.html"
             all_text = "Кулеры для воды 659161"
             name_part_3 = "Радиатор (основной)"    
-            osnova(name_part, all_text, href_str)
+            osnova(name_part_3, all_text, href_str)
         
     nomer += 1
     
