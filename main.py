@@ -71,7 +71,7 @@ for item_one_href in first_href:
 with open("json_href_str.json", "a", encoding="utf-8") as file:
     json.dump(json_href_str, file, indent=4, ensure_ascii=False)"""
 
-def osnova(name_part, all_text, href_str):
+def osnova(name_part_osn, all_text, href_str):
 
     if os.path.exists(f"allegro_{all_text}_{time.strftime('%Y-%m-%d')}.csv"):
         print("файл с таким именем уже есть")
@@ -137,6 +137,7 @@ def osnova(name_part, all_text, href_str):
             href_card = "https://wallegro.ru" + item_card.get("href")
             #print(href_card)
             if href_card not in href_card_list:
+                name_part = name_part_osn
                 href_card_list.append(href_card)
                 print(href_card)
                 req = requests.get(url=href_card, headers=headers)
@@ -204,6 +205,7 @@ def osnova(name_part, all_text, href_str):
                     else:
                         name_part = "Интеркулер"
                 if "Кулеры для воды" in all_text:
+
                     if "комплект кулеров" or "комплект охлаждающих" in part.lower():
                         name_part = "Комплект кулеров"
                     elif "крепление" in part.lower():
@@ -392,13 +394,13 @@ for all_text, href_str in all.items():
             all_text = "Радиаторы масла 130018"
             name_part_1 = "Радиатор масляный"
             print(name_part_1)    
-            osnova(name_part_1, all_text, href_str)
+            #osnova(name_part_1, all_text, href_str)
 
             href_str = "https://wallegro.ru/cat/251084-Radiatory-vozduxa-intercoolery.html"
             all_text = "Радиаторы воздуха 187095"
             name_part_2 = "Интеркулер" 
             print(name_part_2)   
-            osnova(name_part_2, all_text, href_str)
+            #osnova(name_part_2, all_text, href_str)
 
             href_str = "https://wallegro.ru/cat/251082-Kulery-dlya-vody.html"
             all_text = "Кулеры для воды 659161"
